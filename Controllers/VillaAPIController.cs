@@ -15,8 +15,13 @@ namespace VillaApp_WebAPI.Controllers
         public IEnumerable<VillaDTO> GetVillas()
         {
             return VillaStore.villaList;
-        }   
+        }
 
+        [HttpGet("{id:int}")]
+        public VillaDTO GetVillabyId(int id) 
+        {
+            return VillaStore.villaList.Where(x=>x.Id == id).First();  
 
+        }
     }
 }
