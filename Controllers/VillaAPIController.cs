@@ -40,7 +40,11 @@ namespace VillaApp_WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<VillaDTO> CreateVilla([FromBody]VillaDTO villaDTO)
-        {
+       {
+            if (!(ModelState.IsValid)) 
+            {
+                return BadRequest(ModelState); //400 not found 
+            }
             if (villaDTO == null) 
             {
                 return BadRequest(villaDTO);
