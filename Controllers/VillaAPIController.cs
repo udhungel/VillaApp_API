@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using VillaApp_WebAPI.Data;
 using VillaApp_WebAPI.Models;
@@ -93,7 +94,7 @@ namespace VillaApp_WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]   
 
-        public IActionResult UpdateVilla(int id, [FromBody] VillaDTO villaDTO)
+        public IActionResult UpdateVilla(int id, [FromBody] VillaDTO villaDTO) // with IAction Result you do not define the returntype
         {
             if (villaDTO == null || id != villaDTO.Id) //checked if null and id is same if not 
             {
@@ -105,6 +106,31 @@ namespace VillaApp_WebAPI.Controllers
             villa.Occupany = villaDTO.Occupany;
 
 
+            return NoContent();
+        }
+
+        [HttpPatch("{id:int}", Name = "UpdatePartialVilla")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        public IActionResult UpdatePartialVilla(int id, JsonPatchDocument<VillaDTO> patchDTO)
+        {
+            if (patchDTO == null || id == 0) //checked if null and id is same if not 
+            {
+                return BadRequest();  // 400 
+            }
+            var villa = VillaStore.villaList.FirstOrDefault(u => u.Id == id);
+            if (villa == null )
+            {
+                return BadRequest();   // 400 
+
+            }
+            patchDTO.ApplyTo(villa, ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+
+            }
             return NoContent();
 
 
