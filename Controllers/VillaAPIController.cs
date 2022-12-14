@@ -19,11 +19,11 @@ namespace VillaApp_WebAPI.Controllers
             return Ok(VillaStore.villaList);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name = "GetVilla")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]     
-        public ActionResult<VillaDTO> GetVillabyId(int id) 
+        public ActionResult<VillaDTO> GetVilla(int id) 
         {
             if (id == 0)
             {
@@ -32,7 +32,7 @@ namespace VillaApp_WebAPI.Controllers
             }
             var villa = VillaStore.villaList.Where(x => x.Id == id).FirstOrDefault();
             if (villa == null) { return NotFound(); } //404 not found 
-            return Ok();  
+            return Ok(villa);  
 
         }
         [HttpPost]
@@ -52,7 +52,7 @@ namespace VillaApp_WebAPI.Controllers
             villaDTO.Id = VillaStore.villaList.OrderByDescending(u=>u.Id).FirstOrDefault().Id + 1;
 
             VillaStore.villaList.Add(villaDTO);
-            return Ok(villaDTO);
+            return CreatedAtRoute("GetVilla", new {id = villaDTO.Id },villaDTO);
            
         }
     }
