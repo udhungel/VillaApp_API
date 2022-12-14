@@ -87,5 +87,27 @@ namespace VillaApp_WebAPI.Controllers
             VillaStore.villaList.Remove(villa);
             return NoContent();  // when we delete we dont need to pass back anything Status for delete is 204 
         }
+
+
+        [HttpPut("{id:int}", Name = "UpdateVilla")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]   
+
+        public IActionResult UpdateVilla(int id, [FromBody] VillaDTO villaDTO)
+        {
+            if (villaDTO == null || id != villaDTO.Id) //checked if null and id is same if not 
+            {
+                return BadRequest();
+            }
+            var villa = VillaStore.villaList.FirstOrDefault(u => u.Id == id);
+            villa.Name = villaDTO.Name;
+            villa.Sqft = villaDTO.Sqft;
+            villa.Occupany = villaDTO.Occupany;
+
+
+            return NoContent();
+
+
+        }
     }
 }
