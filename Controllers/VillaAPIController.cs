@@ -12,15 +12,22 @@ namespace VillaApp_WebAPI.Controllers
     {
 
         [HttpGet] //failed to lod API defination. Endpoint we add needs to be defined HTTP get or POST
-        public IEnumerable<VillaDTO> GetVillas()
+        public ActionResult<IEnumerable<VillaDTO>> GetVillas()
         {
-            return VillaStore.villaList;
+            return Ok(VillaStore.villaList);
         }
 
         [HttpGet("{id:int}")]
-        public VillaDTO GetVillabyId(int id) 
+        public ActionResult<VillaDTO> GetVillabyId(int id) 
         {
-            return VillaStore.villaList.Where(x=>x.Id == id).First();  
+            if (id == 0)
+            {
+                return BadRequest();
+
+            }
+            var villa = VillaStore.villaList.Where(x => x.Id == id).FirstOrDefault();
+            if (villa == null) { return NotFound(); } //404 not found 
+            return Ok();  
 
         }
     }
