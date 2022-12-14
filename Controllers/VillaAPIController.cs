@@ -41,9 +41,15 @@ namespace VillaApp_WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<VillaDTO> CreateVilla([FromBody]VillaDTO villaDTO)
        {
-            if (!(ModelState.IsValid)) 
+            //if (!(ModelState.IsValid))
+            //{
+            //    return BadRequest(ModelState); //400 not found 
+            //}
+            if (VillaStore.villaList.FirstOrDefault(u => u.Name.ToLower() == villaDTO.Name.ToLower()) != null)
             {
-                return BadRequest(ModelState); //400 not found 
+                ModelState.AddModelError("CustomError", " Villa Name Already Exists  "); 
+                return BadRequest(ModelState);//400 not found 
+
             }
             if (villaDTO == null) 
             {
