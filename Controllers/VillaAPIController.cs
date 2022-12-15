@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using VillaApp_WebAPI.Data;
+using VillaApp_WebAPI.Logging;
 using VillaApp_WebAPI.Models;
 using VillaApp_WebAPI.Models.Dto;
 
@@ -13,18 +14,18 @@ namespace VillaApp_WebAPI.Controllers
     [ApiController]
     public class VillaAPIController : ControllerBase
     {
-        private readonly ILogger<VillaAPIController> _logger;
+        private readonly Ilogging _logger;
 
-        public VillaAPIController(ILogger<VillaAPIController> logger) 
+        public VillaAPIController(Ilogging logger) 
         {
-            _logger = logger;
+            _logger = logger; 
         } 
 
         [HttpGet] //failed to lod API defination. Endpoint we add needs to be defined HTTP get or POST
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<VillaDTO>> GetVillas()
         {
-            _logger.LogInformation("Get all Villas");
+            _logger.LogError("Get all Villas", "");
             return Ok(VillaStore.villaList);
         }
 
@@ -36,7 +37,7 @@ namespace VillaApp_WebAPI.Controllers
         {
             if (id == 0)
             {
-                _logger.LogInformation("Get Villa with Id Error {0}", id);
+                _logger.LogError("Get Villa with Id Error {0}" + id , "error");
                 return BadRequest(); //400 not found
 
             }

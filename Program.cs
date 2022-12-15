@@ -1,11 +1,13 @@
 using Serilog;
+using VillaApp_WebAPI.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 //logger configuration using SiriLog
-Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo.File("log/villaLogs.txt",rollingInterval:RollingInterval.Day).CreateLogger();
+Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo.File("log/villaLogs.txt", rollingInterval: RollingInterval.Day).CreateLogger();
+
 
 builder.Services.AddControllers(options =>{
                                              //options.ReturnHttpNotAcceptable = true; //for text/plain need to comment it
@@ -15,8 +17,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<Ilogging, Logging>();
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
