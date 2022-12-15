@@ -2,7 +2,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers(options =>{
-                                             //options.ReturnHttpNotAcceptable = true;
+                                             //options.ReturnHttpNotAcceptable = true; //text/plain need to comment it
                                           }).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters();
                                             
 builder.Services.AddControllers();
