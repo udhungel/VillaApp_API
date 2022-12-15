@@ -1,8 +1,14 @@
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+//logger configuration using SiriLog
+Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo.File("log/villaLogs.txt",rollingInterval:RollingInterval.Day).CreateLogger();
+
 builder.Services.AddControllers(options =>{
-                                             //options.ReturnHttpNotAcceptable = true; //text/plain need to comment it
+                                             //options.ReturnHttpNotAcceptable = true; //for text/plain need to comment it
                                           }).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters();
                                             
 builder.Services.AddControllers();
