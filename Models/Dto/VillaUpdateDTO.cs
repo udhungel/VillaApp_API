@@ -3,10 +3,11 @@
 namespace VillaApp_WebAPI.Models.Dto
 {
     //things you want to expose 
-    public class VillaDTO
+    public class VillaUpdateDTO
     {
-        [Key]
+        [Required]
         public int Id { get; set; }
+
         [Required]
         [MaxLength(30)]
         public string Name { get; set; }
@@ -14,8 +15,11 @@ namespace VillaApp_WebAPI.Models.Dto
 
         [Required]
         public double Rate { get; set; }
+        [Required]
         public int Occupany { get; set; }
+        [Required]
         public int Sqft { get; set; }
+        [Required]
         public string ImageUrl { get; set; }
         public string Amenity { get; set; }
     }
