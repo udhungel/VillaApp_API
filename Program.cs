@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using VillaApp_WebAPI.AutoMapper;
 using VillaApp_WebAPI.Data;
 using VillaApp_WebAPI.Logging;
 
@@ -17,7 +18,9 @@ builder.Services.AddControllers(options =>{
 builder.Services.AddDbContext<ApplicationDBContext>(option => {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
                                                                });
-                                            
+//AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingConfig));
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
