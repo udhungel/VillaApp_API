@@ -7,7 +7,7 @@ namespace VillaApp_WebAPI.Repository.IRepository
     {
         Task<List<Villa>> GetAll(Expression<Func<Villa, bool>> filter = null );
         //async tracking
-        Task<Villa> GetAll(Expression<Func<Villa, bool>> filter = null, bool trackeed= true );
+        Task<Villa> Get(Expression<Func<Villa, bool>> filter = null, bool trackeed= true );
         Task Create(Villa entity);
         Task Remove(Villa entity);
         Task Save();

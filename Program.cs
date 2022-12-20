@@ -3,6 +3,7 @@ using Serilog;
 using VillaApp_WebAPI.AutoMapper;
 using VillaApp_WebAPI.Data;
 using VillaApp_WebAPI.Logging;
+using VillaApp_WebAPI.Repository;
 using VillaApp_WebAPI.Repository.IRepository;
 
 var builder = WebApplication.CreateBuilder(args);
