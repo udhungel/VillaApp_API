@@ -5,12 +5,14 @@ namespace VillaApp_WebAPI.Repository.IRepository
 {
     public interface IVillaRepository
     {
-        Task<List<Villa>> GetAll(Expression<Func<Villa, bool>> filter = null );
+        Task<List<Villa>> GetAllAsync(Expression<Func<Villa, bool>> filter = null ); //all record GET call 
         //async tracking
-        Task<Villa> Get(Expression<Func<Villa, bool>> filter = null, bool trackeed= true );
-        Task Create(Villa entity);
-        Task Remove(Villa entity);
-        Task Save();
+        Task<Villa> GetAsync(Expression<Func<Villa, bool>> filter = null, bool trackeed= true ); //GEt by id returns one record
+        Task CreateAsync(Villa entity);
+        Task RemoveAsync(Villa entity);
+        Task SaveAsync();
+
+        Task UpdateAsync(Villa entity);
 
 
 
