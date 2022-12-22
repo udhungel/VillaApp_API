@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Net;
 using VillaApp_WebAPI.Data;
 using VillaApp_WebAPI.Logging;
 using VillaApp_WebAPI.Models;
@@ -18,41 +19,76 @@ namespace VillaApp_WebAPI.Controllers
     [ApiController]
     public class VillaAPIController : ControllerBase
     {
+        private APIResponse _response;
         private readonly Ilogging _logger;
         private readonly IVillaRepository _dbVilla;
         private readonly IMapper _mapper;
 
-        public VillaAPIController(Ilogging logger, IVillaRepository dbVilla, IMapper mapper) 
+        public VillaAPIController(Ilogging logger, IVillaRepository dbVilla, IMapper mapper)
         {
             _logger = logger;
             _dbVilla = dbVilla;
             _mapper = mapper;
-        } 
+            this._response = new();
+        }
 
         [HttpGet] //failed to lod API defination. Endpoint we add needs to be defined HTTP get or POST
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<VillaDTO>>> GetVillas()
+        public async Task<ActionResult<APIResponse>> GetVillas()
         {
-            IEnumerable<Villa> villaList = await _dbVilla.GetAllAsync(); //tolistAsync 
-            _logger.LogError("Get all Villas", "");
-            return  Ok( _mapper.Map<List<VillaDTO>>(villaList));
+            try
+            {
+                IEnumerable<Villa> villaList = await _dbVilla.GetAllAsync(); //tolistAsync 
+                _logger.LogError("Get all Villas", "");
+                _response.Result = _mapper.Map<List<VillaDTO>>(villaList);
+                _response.StatusCode = System.Net.HttpStatusCode.OK;
+                return Ok(_response);
+
+            }
+            catch (Exception ex)
+            {
+                _response.IsSucess = false;
+                _response.ErrorMessage = new List<string>() { ex.ToString() };
+
+
+            }
+            return _response;
         }
 
         [HttpGet("{id:int}", Name = "GetVilla")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<VillaDTO>> GetVilla(int id)
+        public async Task<ActionResult<APIResponse>> GetVilla(int id)
         {
-            if (id == 0)
+            try
             {
-                _logger.LogError("Get Villa with Id Error {0}" + id , "error");
-                return BadRequest(); //400 not found
+                if (id == 0)
+                {
+                    _response.StatusCode =HttpStatusCode.BadRequest;
+                    _logger.LogError("Get Villa with Id Error {0}" + id, "error");
+                    return BadRequest(_response); //400 not found
+                }
+                var villa = await _dbVilla.GetAsync(x => x.Id == id);
+                if (villa == null)
+                {
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    return NotFound(_response); //404 not found 
+                }    
+                
+                _logger.LogError("Get all Villas", "");
+                _response.Result = _mapper.Map<VillaDTO>(villa);
+                _response.StatusCode = System.Net.HttpStatusCode.OK;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSucess = false;
+                _response.ErrorMessage = new List<string>() { ex.ToString() };
+
 
             }
-            var villa =await _dbVilla.GetAsync(x => x.Id == id); 
-            if (villa == null) { return NotFound(); } //404 not found 
-            return Ok(_mapper.Map<VillaDTO>(villa));
+            return _response;
 
         }
 
@@ -61,32 +97,47 @@ namespace VillaApp_WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<VillaDTO>> CreateVilla([FromBody] VillaCreateDTO createDTO)
+        public async Task<ActionResult<APIResponse>> CreateVilla([FromBody] VillaCreateDTO createDTO)
         {
-            //if (!(ModelState.IsValid))
-            //{
-            //    return BadRequest(ModelState); //400 not found 
-            //}
-            if (await _dbVilla.GetAsync(u => u.Name.ToLower() == createDTO.Name.ToLower()) != null)
+            try
             {
-                ModelState.AddModelError("CustomError", " Villa Name Already Exists  ");
-                return BadRequest(ModelState);//400 not found 
+                //if (!(ModelState.IsValid))
+                //{
+                //    return BadRequest(ModelState); //400 not found 
+                //}
+                if (await _dbVilla.GetAsync(u => u.Name.ToLower() == createDTO.Name.ToLower()) != null)
+                {
+                    ModelState.AddModelError("CustomError", " Villa Name Already Exists  ");
+                    return BadRequest(ModelState);//400 not found 
+
+                }
+                if (createDTO == null)
+                {
+                    return BadRequest(createDTO);
+                }
+                //if (villaDTO.Id > 0)
+                //{
+                //    return StatusCode(StatusCodes.Status500InternalServerError);
+                //}
+                Villa villa = _mapper.Map<Villa>(createDTO);
+
+                await _dbVilla.CreateAsync(villa);
+                _response.Result = _mapper.Map<VillaDTO>(villa);
+                _response.StatusCode = System.Net.HttpStatusCode.Created;
+                // return Ok(_response);
+
+
+
+                return CreatedAtRoute("GetVilla", new { id = villa.Id }, _response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSucess = false;
+                _response.ErrorMessage = new List<string>() { ex.ToString() };
+
 
             }
-            if (createDTO == null)
-            {
-                return BadRequest(createDTO);
-            }
-            //if (villaDTO.Id > 0)
-            //{
-            //    return StatusCode(StatusCodes.Status500InternalServerError);
-            //}
-            Villa model = _mapper.Map<Villa>(createDTO);
-           
-            await _dbVilla.CreateAsync(model);
-
-           
-            return CreatedAtRoute("GetVilla", new { id = model.Id }, model);
+            return _response;
 
         }
 
@@ -94,37 +145,65 @@ namespace VillaApp_WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteVilla (int id) 
+        public async Task<ActionResult<APIResponse>> DeleteVilla(int id)
         {
-            if (id == 0)
+            try
             {
-                return BadRequest();// 400 
+                if (id == 0)
+                {
+                    return BadRequest();// 400 
+
+                }
+                var villa = await _dbVilla.GetAsync(u => u.Id == id); //GetAsyn does as FirstOrDefault
+                if (villa == null)
+                {
+                    return NotFound(); // 404 
+                }
+                await _dbVilla.RemoveAsync(villa);
+
+                _response.StatusCode = System.Net.HttpStatusCode.NoContent;
+                return Ok(_response);
+
+                //return NoContent();  // when we delete we dont need to pass back anything Status for delete is 204 
+            }
+            catch (Exception ex)
+            {
+                _response.IsSucess = false;
+                _response.ErrorMessage = new List<string>() { ex.ToString() };
+
 
             }
-            var villa = await _dbVilla.GetAsync(u=>u.Id == id); //GetAsyn does as FirstOrDefault
-            if (villa == null)
-            {
-                return NotFound(); // 404 
-            }
-            await  _dbVilla.RemoveAsync(villa);
-          
-            return NoContent();  // when we delete we dont need to pass back anything Status for delete is 204 
+            return _response;
         }
 
 
         [HttpPut("{id:int}", Name = "UpdateVilla")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]   
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public async Task<IActionResult> UpdateVilla(int id, [FromBody]VillaUpdateDTO updateDTO) // with IAction Result you do not define the returntype
+        public async Task<ActionResult<APIResponse>> UpdateVilla(int id, [FromBody] VillaUpdateDTO updateDTO) // with IAction Result you do not define the returntype
         {
-            if (updateDTO == null || id != updateDTO.Id) //checked if null and id is same if not 
+            try
             {
-                return BadRequest();
+                if (updateDTO == null || id != updateDTO.Id) //checked if null and id is same if not 
+                {
+                    return BadRequest();
+                }
+                Villa model = _mapper.Map<Villa>(updateDTO);
+                await _dbVilla.UpdateAsync(model);
+
+                _response.StatusCode = System.Net.HttpStatusCode.NoContent;
+                _response.IsSucess = true;
+                return Ok(_response);
             }
-            Villa model = _mapper.Map<Villa>(updateDTO);           
-            await _dbVilla.UpdateAsync(model);
-            return NoContent();
+            catch (Exception ex)
+            {
+                _response.IsSucess = false;
+                _response.ErrorMessage = new List<string>() { ex.ToString() };
+
+
+            }
+            return _response;
         }
 
         [HttpPatch("{id:int}", Name = "UpdatePartialVilla")]
@@ -140,16 +219,16 @@ namespace VillaApp_WebAPI.Controllers
             var villa = await _dbVilla.GetAsync(u => u.Id == id, false); // async firstorDefault
 
             VillaUpdateDTO villaDTO = _mapper.Map<VillaUpdateDTO>(villa);
-           
-            if (villa == null )
+
+            if (villa == null)
             {
                 return BadRequest();   // 400 
 
             }
             patchDTO.ApplyTo(villaDTO, ModelState);
-            Villa model = _mapper.Map<Villa>(villaDTO);            
+            Villa model = _mapper.Map<Villa>(villaDTO);
             await _dbVilla.UpdateAsync(model);
-            
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
