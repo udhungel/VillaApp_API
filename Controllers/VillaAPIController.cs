@@ -86,7 +86,7 @@ namespace VillaApp_WebAPI.Controllers
             await _dbVilla.CreateAsync(model);
 
            
-            return CreatedAtRoute("GetVilla", new { id = model.Id }, createDTO);
+            return CreatedAtRoute("GetVilla", new { id = model.Id }, model);
 
         }
 
