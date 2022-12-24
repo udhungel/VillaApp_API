@@ -10,9 +10,9 @@ namespace VillaApp_WebAPI.Models
 
         public string SpecialDetails { get; set; }
 
-        public string CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
-        public string UpdatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
 
     }
 }

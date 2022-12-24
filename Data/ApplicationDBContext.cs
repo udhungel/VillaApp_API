@@ -9,6 +9,9 @@ namespace VillaApp_WebAPI.Data
        
         public DbSet<Villa> Villas  { get; set; }
 
+        public DbSet<VillaNumber> VillaNumbers { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
