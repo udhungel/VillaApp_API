@@ -23,14 +23,16 @@ namespace VillaApp_WebAPI.Controllers
         private APIResponse _response;
         private readonly Ilogging _logger;
         private readonly IVillaNumberRepository _dbVillaNumber;
+        private readonly IVillaRepository _dbVilla;
         private readonly IMapper _mapper;
 
-        public VillaNumberAPIController(Ilogging logger, IVillaNumberRepository dbVilla, IMapper mapper, IVillaNumberRepository dbVillaNumber)
+        public VillaNumberAPIController(Ilogging logger, IVillaNumberRepository dbVillaNumber, IMapper mapper,IVillaRepository dbVilla)
         {
             _logger = logger;
             _dbVillaNumber = dbVillaNumber;
             _mapper = mapper;
             this._response = new();
+            _dbVilla = dbVilla;
         }
 
         [HttpGet] //failed to lod API defination. Endpoint we add needs to be defined HTTP get or POST
@@ -108,6 +110,12 @@ namespace VillaApp_WebAPI.Controllers
                     return BadRequest(ModelState);//400 not found 
 
                 }
+                if (await _dbVilla.GetAsync(db=>db.Id == createDTO.VillaID) == null)
+                {
+                    ModelState.AddModelError("CustomError", " VillaId is Invalid.");
+                    return BadRequest(ModelState);
+
+                }
                 if (createDTO == null)
                 {
                     return BadRequest(createDTO);
@@ -177,6 +185,13 @@ namespace VillaApp_WebAPI.Controllers
                 if (updateDTO == null || id != updateDTO.VillaNo) //checked if null and id is same if not 
                 {
                     return BadRequest();
+                }
+
+                if (await _dbVilla.GetAsync(db => db.Id == updateDTO.VillaID) == null)
+                {
+                    ModelState.AddModelError("CustomError", " VillaId is Invalid.");
+                    return BadRequest(ModelState);
+
                 }
                 VillaNumber model = _mapper.Map<VillaNumber>(updateDTO);
                 await _dbVillaNumber.UpdateAsync(model);

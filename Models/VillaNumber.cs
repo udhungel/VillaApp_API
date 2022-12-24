@@ -14,5 +14,10 @@ namespace VillaApp_WebAPI.Models
 
         public DateTime UpdatedDate { get; set; }
 
+        [ForeignKey("Villa")] // here Villa is the name of the associated Navigation Property 
+        public int VillaID { get; set; }
+
+        public Villa Villa { get; set; }
+
     }
 }
