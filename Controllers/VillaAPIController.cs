@@ -100,11 +100,7 @@ namespace VillaApp_WebAPI.Controllers
         public async Task<ActionResult<APIResponse>> CreateVilla([FromBody] VillaCreateDTO createDTO)
         {
             try
-            {
-                //if (!(ModelState.IsValid))
-                //{
-                //    return BadRequest(ModelState); //400 not found 
-                //}
+            {   
                 if (await _dbVilla.GetAsync(u => u.Name.ToLower() == createDTO.Name.ToLower()) != null)
                 {
                     ModelState.AddModelError("CustomError", " Villa Name Already Exists  ");
@@ -114,20 +110,12 @@ namespace VillaApp_WebAPI.Controllers
                 if (createDTO == null)
                 {
                     return BadRequest(createDTO);
-                }
-                //if (villaDTO.Id > 0)
-                //{
-                //    return StatusCode(StatusCodes.Status500InternalServerError);
-                //}
+                }               
                 Villa villa = _mapper.Map<Villa>(createDTO);
 
                 await _dbVilla.CreateAsync(villa);
                 _response.Result = _mapper.Map<VillaDTO>(villa);
                 _response.StatusCode = System.Net.HttpStatusCode.Created;
-                // return Ok(_response);
-
-
-
                 return CreatedAtRoute("GetVilla", new { id = villa.Id }, _response);
             }
             catch (Exception ex)
