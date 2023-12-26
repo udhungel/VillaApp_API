@@ -1,0 +1,23 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/MagicVilla_Utility/obj/Debug/net7.0
+/MagicVilla_Utility/obj
+/MagicVilla_Web/obj/MagicVilla_Web.csproj.nuget.dgspec.json
+/MagicVilla_Web/obj/project.assets.json
+/MagicVilla_Web/obj/project.nuget.cache
+/MagicVilla_Utility/bin/Debug/net7.0
+*.dll
+/MagicVilla_Web/bin/Debug/net7.0/MagicVilla_Utility.pdb
+/MagicVilla_Web/bin/Debug/net7.0/MagicVilla_Web.deps.json
+/MagicVilla_Web/bin/Debug/net7.0/MagicVilla_Web.dll
+/MagicVilla_Web/bin/Debug/net7.0/MagicVilla_Web.pdb
+/MagicVilla_Web/obj/Debug/net7.0/ref/MagicVilla_Web.dll
+/MagicVilla_Web/obj/Debug/net7.0/MagicVilla_Web.csproj.AssemblyReference.cache
+/MagicVilla_Web/obj/Debug/net7.0/refint/MagicVilla_Web.dll
+/MagicVilla_Web/obj/Debug/net7.0/MagicVilla_Web.csproj.CoreCompileInputs.cache
+/MagicVilla_Web/obj/Debug/net7.0/MagicVilla_Web.csproj.CopyComplete
+/MagicVilla_Web/obj/Debug/net7.0/MagicVilla_Web.csproj.FileListAbsolute.txt
+/MagicVilla_Web/obj/Debug/net7.0/MagicVilla_Web.dll
+/MagicVilla_Web/obj/Debug/net7.0/MagicVilla_Web.pdb
