@@ -28,6 +28,7 @@ namespace MagicVilla_Web.Services
                 var client = httpClientFactory.CreateClient("MagicAPI");
                 HttpRequestMessage httpRequestMessage = new HttpRequestMessage();
                 httpRequestMessage.Headers.Add("Accept", "application/json");
+                httpRequestMessage.RequestUri =  new Uri(apiRequest.Url);   
                 if (apiRequest.Data != null)
                 {
                     //not null HTTP POST/PUT
