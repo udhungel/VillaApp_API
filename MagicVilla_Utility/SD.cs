@@ -6,7 +6,7 @@ namespace MagicVilla_Utility
     {
         public enum ApiType
         {
-            Get,
+            GET,
             POST,
             PUT,
             DELETE

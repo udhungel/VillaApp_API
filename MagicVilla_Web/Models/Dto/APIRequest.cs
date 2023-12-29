@@ -5,7 +5,7 @@ namespace MagicVilla_Web.Models.Dto
 {
     public class APIRequest
     {
-        public ApiType ApiType { get; set; } = ApiType.Get;
+        public ApiType ApiType { get; set; } = ApiType.GET;
 
         public string Url { get; set; }
 

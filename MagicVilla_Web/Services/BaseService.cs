@@ -19,8 +19,7 @@ namespace MagicVilla_Web.Services
         {
             this.responseModel = new();
             this.httpClientFactory = httpClientFactory; 
-        }
-      
+        }     
 
         public async Task<T> SendAsync<T>(APIRequest apiRequest)
         {
@@ -34,7 +33,6 @@ namespace MagicVilla_Web.Services
                     //not null HTTP POST/PUT
                     httpRequestMessage.Content = new StringContent(JsonConvert.SerializeObject(apiRequest.Data), Encoding.UTF8, "application/json");
                 }
-
 
                 switch (apiRequest.ApiType)
                 {
@@ -51,7 +49,6 @@ namespace MagicVilla_Web.Services
                         httpRequestMessage.Method = HttpMethod.Get;
                         break;
                 }
-
                 HttpResponseMessage apiResponse = null; 
 
                 apiResponse = await client.SendAsync(httpRequestMessage);
