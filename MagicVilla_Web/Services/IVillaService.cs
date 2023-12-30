@@ -7,7 +7,7 @@ namespace MagicVilla_Web.Services
         Task<T> GetAllAsync<T>();
         Task<T> GetAllAsync<T>(int id);
         Task<T> CreateAsync<T>(VillaCreateDTO dto);
-        Task<T> UpdateAsync<T>(int id);
+        Task<T> UpdateAsync<T>(VillaUpdateDTO dto);
         Task<T> DeleteAsync<T>(int id);
     }
 }
