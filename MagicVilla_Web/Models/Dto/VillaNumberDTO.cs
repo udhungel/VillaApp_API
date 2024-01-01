@@ -10,6 +10,9 @@ namespace MagicVilla_Web.Models.Dto
         public int VillaID { get; set; }
 
         public string SpecialDetails { get; set; }
+
+        //navigation property
+        public VillaDTO Villa { get; set; }
        
     }
 }
