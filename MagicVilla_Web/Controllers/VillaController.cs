@@ -43,7 +43,8 @@ namespace MagicVilla_Web.Controllers
                 var response = await _villaService.CreateAsync<APIResponse>(model);
                 if (response != null && response.IsSucess)
                 {
-                   return RedirectToAction(nameof(IndexVilla));
+                    TempData["success"] = "Villa created Successfully";
+                    return RedirectToAction(nameof(IndexVilla));
                 }
 
 
@@ -55,7 +56,7 @@ namespace MagicVilla_Web.Controllers
         {
             var response = await _villaService.GetAllAsync<APIResponse>(villaId);
             if (response != null && response.IsSucess)
-            {
+            {                
                 VillaDTO model = JsonConvert.DeserializeObject<VillaDTO>(Convert.ToString(response.Result));
                 return View(_mapper.Map<VillaUpdateDTO>(model));
 
@@ -72,6 +73,7 @@ namespace MagicVilla_Web.Controllers
                 var response = await _villaService.UpdateAsync<APIResponse>(model);
                 if (response != null && response.IsSucess)
                 {
+                    TempData["success"] = "Villa updated Successfully";
                     return RedirectToAction(nameof(IndexVilla));
                 }
             }
@@ -97,9 +99,10 @@ namespace MagicVilla_Web.Controllers
                var response = await _villaService.DeleteAsync<APIResponse>(model.Id);
                 if (response != null && response.IsSucess)
                 {
-                    return RedirectToAction(nameof(IndexVilla));
+                TempData["success"] = "Villa deleted Successfully";
+                return RedirectToAction(nameof(IndexVilla));
                 }
-            
+            TempData["error"] = "Error Encountered";
             return View(model);
         }
 
