@@ -36,7 +36,11 @@ namespace MagicVilla_API.Repository
              && u.Password == loginRequestDto.Password);
             if (user == null)
             {
-                return null;
+                return new LoginResponsetDto {
+                    Token = string.Empty,
+                    User = null
+                
+                };
             }
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(secretKey);
