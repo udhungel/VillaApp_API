@@ -55,12 +55,13 @@ namespace MagicVilla_Web.Controllers
                 var response = await _villaNumberService.CreateAsync<APIResponse>(model.villaNumber);
                 if (response != null && response.IsSucess)
                 {
+                    TempData["success"] = "Villa Number created Successfully";
                     return RedirectToAction(nameof(IndexVillaNumber));
                 }
                 else
                 {
                     if (response.ErrorMessage.Count>0)
-                    {
+                    {                        
                         ModelState.AddModelError("ErrorMessage", response.ErrorMessage.FirstOrDefault());
 
                     }
@@ -114,6 +115,7 @@ namespace MagicVilla_Web.Controllers
                 var response = await _villaNumberService.UpdateAsync<APIResponse>(model.villaNumber);
                 if (response != null && response.IsSucess)
                 {
+                    TempData["success"] = "Villa Number updated Successfully";
                     return RedirectToAction(nameof(IndexVillaNumber));
                 }
                 else
@@ -172,6 +174,7 @@ namespace MagicVilla_Web.Controllers
             var response = await _villaNumberService.DeleteAsync<APIResponse>(model.villaNumber.VillaNo);
             if (response != null && response.IsSucess)
             {
+                TempData["success"] = "Villa Number deleted Successfully";
                 return RedirectToAction(nameof(IndexVillaNumber));
             }
 
