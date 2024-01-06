@@ -15,7 +15,7 @@ namespace MagicVilla_Web.Services
 
         }
 
-        public Task<T> LoginAsync<T>(LoginResponsetDto obj)
+        public Task<T> LoginAsync<T>(LoginRequestDto obj)
         {
             return SendAsync<T>(new APIRequest()
             {
@@ -35,7 +35,7 @@ namespace MagicVilla_Web.Services
                 Url = villaUrl + "api/UsersAuth/register"
 
             });
-        }
+        }      
     }
 }
 
