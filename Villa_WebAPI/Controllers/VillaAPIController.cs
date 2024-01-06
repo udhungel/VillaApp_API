@@ -36,11 +36,19 @@ namespace VillaApp_WebAPI.Controllers
         [HttpGet] //failed to lod API defination. Endpoint we add needs to be defined HTTP get or POST
         [ResponseCache(CacheProfileName ="Default30")]
         [ProducesResponseType(StatusCodes.Status200OK)]     
-        public async Task<ActionResult<APIResponse>> GetVillas()
+        public async Task<ActionResult<APIResponse>> GetVillas([FromQuery(Name ="filterOccupany")] int? occupancy)
         {
             try
             {
-                IEnumerable<Villa> villaList = await _dbVilla.GetAllAsync(); //tolistAsync 
+                IEnumerable<Villa> villaList;
+                if (occupancy > 0)
+                {
+                    villaList = await _dbVilla.GetAllAsync(u => u.Occupany == occupancy); 
+                }
+                else
+                {
+                    villaList = await _dbVilla.GetAllAsync(); //tolistAsync 
+                }
                 _logger.LogError("Get all Villas", "");
                 _response.Result = _mapper.Map<List<VillaDTO>>(villaList);
                 _response.StatusCode = System.Net.HttpStatusCode.OK;
