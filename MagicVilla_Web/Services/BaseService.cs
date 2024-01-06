@@ -50,7 +50,12 @@ namespace MagicVilla_Web.Services
                         httpRequestMessage.Method = HttpMethod.Get;
                         break;
                 }
-                HttpResponseMessage apiResponse = null; 
+                HttpResponseMessage apiResponse = null;
+                if (!string.IsNullOrEmpty(apiRequest.token))
+                {
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiRequest.token);
+
+                }
 
                apiResponse = await client.SendAsync(httpRequestMessage);
 
@@ -62,7 +67,7 @@ namespace MagicVilla_Web.Services
                     if (apiResponse.StatusCode == System.Net.HttpStatusCode.BadRequest || apiResponse.StatusCode == System.Net.HttpStatusCode.NotFound)
                     {
                         ApiResponse.StatusCode = System.Net.HttpStatusCode.BadRequest;
-                        ApiResponse.IsSucess = false;
+                        ApiResponse.IsSuccess = false;
                         var res = JsonConvert.SerializeObject(ApiResponse);
                         var resultObj = JsonConvert.DeserializeObject<T>(res);
                         return resultObj;
@@ -83,7 +88,7 @@ namespace MagicVilla_Web.Services
                 var dto = new APIResponse
                 {
                     ErrorMessage = new List<string> { Convert.ToString(e.Message) },
-                    IsSucess = false,
+                    IsSuccess = false,
                 };
                 var res = JsonConvert.SerializeObject(dto);
                 var APIResponse = JsonConvert.DeserializeObject<T>(res);

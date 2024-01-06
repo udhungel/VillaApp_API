@@ -34,10 +34,7 @@ namespace VillaApp_WebAPI.Controllers
         }
 
         [HttpGet] //failed to lod API defination. Endpoint we add needs to be defined HTTP get or POST
-        [Authorize]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status200OK)]     
         public async Task<ActionResult<APIResponse>> GetVillas()
         {
             try

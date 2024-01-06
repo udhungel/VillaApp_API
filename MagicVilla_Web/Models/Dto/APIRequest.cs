@@ -9,7 +9,9 @@ namespace MagicVilla_Web.Models.Dto
 
         public string Url { get; set; }
 
-        public object Data { get; set; }       
-      
+        public object Data { get; set; }  
+        
+        public string token { get; set; }
+
     }
 }

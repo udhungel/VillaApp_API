@@ -32,7 +32,7 @@ namespace MagicVilla_Web.Controllers
         public async Task<IActionResult> Login(LoginRequestDto loginRequestDto)
         {
             APIResponse response = await _authService.LoginAsync<APIResponse>(loginRequestDto);
-            if (response != null && response.IsSucess)
+            if (response != null && response.IsSuccess)
             {
                 LoginResponsetDto model = JsonConvert.DeserializeObject<LoginResponsetDto>(Convert.ToString(response.Result));
                 var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -62,7 +62,7 @@ namespace MagicVilla_Web.Controllers
         public async Task<IActionResult> Register(RegistrationRequestDto registrationRequestDto)
         {
             APIResponse apiResponse = await _authService.RegisterAsync<APIResponse>(registrationRequestDto);
-            if (apiResponse !=null && apiResponse.IsSucess)
+            if (apiResponse !=null && apiResponse.IsSuccess)
             {
                 return RedirectToAction("Login");
             }
