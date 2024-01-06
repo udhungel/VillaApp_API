@@ -34,7 +34,7 @@ namespace VillaApp_WebAPI.Controllers
         }
 
         [HttpGet] //failed to lod API defination. Endpoint we add needs to be defined HTTP get or POST
-        [ResponseCache(Duration =30)]
+        [ResponseCache(CacheProfileName ="Default30")]
         [ProducesResponseType(StatusCodes.Status200OK)]     
         public async Task<ActionResult<APIResponse>> GetVillas()
         {
