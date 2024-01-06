@@ -18,7 +18,7 @@ namespace MagicVilla_Web.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            LoginResponsetDto obj = new LoginResponsetDto();
+            LoginRequestDto obj = new();
             return View(obj);
         }
 
