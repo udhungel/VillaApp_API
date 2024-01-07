@@ -1,17 +1,15 @@
 ﻿using AutoMapper;
+using MagicVilla_API.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System.Net;
-using VillaApp_WebAPI.Data;
 using VillaApp_WebAPI.Logging;
 using VillaApp_WebAPI.Models;
 using VillaApp_WebAPI.Models.Dto;
 using VillaApp_WebAPI.Repository.IRepository;
+
 
 namespace VillaApp_WebAPI.Controllers
 {
@@ -50,6 +48,10 @@ namespace VillaApp_WebAPI.Controllers
                     villaList = await _dbVilla.GetAllAsync(pageSize: pageSize, pageNumber: pageNumber); //tolistAsync 
                 }
                 _logger.LogError("Get all Villas", "");
+
+                Pagination pagination = new Pagination() { PageSize = pageSize, PageNumber = pageNumber };
+              
+                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(pagination));
                 _response.Result = _mapper.Map<List<VillaDTO>>(villaList);
                 _response.StatusCode = System.Net.HttpStatusCode.OK;
                 return Ok(_response);
