@@ -55,7 +55,6 @@ namespace MagicVilla_VillaAPI.Repository
                     User = null
                 };
             }
-
             //if user was found generate JWT Token
             var roles = await _userManager.GetRolesAsync(user);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -73,7 +72,7 @@ namespace MagicVilla_VillaAPI.Repository
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            LoginResponsetDto loginResponseDTO = new()
+            LoginResponsetDto loginResponseDTO = new LoginResponsetDto()
             {
                 Token = tokenHandler.WriteToken(token),
                 User = _mapper.Map<UserDto>(user),

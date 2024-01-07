@@ -2,8 +2,7 @@
 {
     public class LoginResponsetDto
     {
-        public UserDto User { get; set; }
-        public string Role { get; set; }
+        public UserDto User { get; set; }      
         public string Token { get; set; }
     }
 }

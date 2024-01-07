@@ -50,7 +50,7 @@ namespace MagicVilla_API.Controllers
 
             }
             var user = await _userRepository.Register(model);
-            if (user == null || user.Id == 0)
+            if (user == null)
             {
                 _response.StatusCode = System.Net.HttpStatusCode.OK;
                 _response.IsSucess = false;
