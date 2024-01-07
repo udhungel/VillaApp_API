@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using MagicVilla_API.Models;
+using MagicVilla_VillaAPI.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
