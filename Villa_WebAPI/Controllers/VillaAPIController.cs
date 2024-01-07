@@ -81,6 +81,7 @@ namespace VillaApp_WebAPI.Controllers
                 if (id == 0)
                 {
                     _response.StatusCode =HttpStatusCode.BadRequest;
+                    _response.IsSucess = false;
                     _logger.LogError("Get Villa with Id Error {0}" + id, "error");
                     return BadRequest(_response); //400 not found
                 }
@@ -88,6 +89,7 @@ namespace VillaApp_WebAPI.Controllers
                 if (villa == null)
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
+                    _response.IsSucess=false;
                     return NotFound(_response); //404 not found 
                 }    
                 
