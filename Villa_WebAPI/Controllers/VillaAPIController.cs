@@ -34,7 +34,7 @@ namespace VillaApp_WebAPI.Controllers
         [HttpGet] //failed to lod API defination. Endpoint we add needs to be defined HTTP get or POST
         [ResponseCache(CacheProfileName ="Default30")]
         [ProducesResponseType(StatusCodes.Status200OK)]     
-        public async Task<ActionResult<APIResponse>> GetVillas([FromQuery(Name ="filterOccupany")] int? occupancy, int pageSize = 3, int pageNumber = 1 )
+        public async Task<ActionResult<APIResponse>> GetVillas([FromQuery(Name ="filterOccupany")] int? occupancy, int pageSize =0, int pageNumber = 1 )
         {
             try
             {

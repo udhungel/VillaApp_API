@@ -48,7 +48,7 @@ namespace VillaApp_WebAPI.Repository
 
         }
 
-        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null , int pageSize = 3, int pageNumber = 1)
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null , int pageSize = 0, int pageNumber = 1)
         {
             IQueryable<T> query = dbSet; // it does not get executed right away         
 
