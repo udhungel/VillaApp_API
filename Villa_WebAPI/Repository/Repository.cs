@@ -48,13 +48,32 @@ namespace VillaApp_WebAPI.Repository
 
         }
 
-        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null , int pageSize = 3, int pageNumber = 1)
         {
             IQueryable<T> query = dbSet; // it does not get executed right away         
 
             if (filter != null)
             {
                 query = query.Where(filter);
+            }
+            if (pageSize > 0)
+            {
+                if (pageSize > 100)
+                {
+                    pageSize = 100;
+                }
+                //Dry Run
+                //pageSize = 5 , pageNumber = 1
+                //skip(5 * (2-1).Take(5)
+                //Skip(0).Take(5)
+               
+                //page 2 
+                //pageSize = 5 , pageNumber = 2
+                //skip(5 * (2-1).Take(5)
+                //Skip(5).Take(5)  skips first five and take next 5
+              
+                query = query.Skip(pageSize * (pageNumber - 1)).Take(pageSize);
+
             }
             if (includeProperties != null)
             {
