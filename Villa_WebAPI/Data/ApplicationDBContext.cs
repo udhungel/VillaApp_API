@@ -29,7 +29,7 @@ namespace VillaApp_WebAPI.Data
                    Rate = 200,
                    Sqft = 550,
                    Amenity = "",
-                   CreatedDate= DateTime.Now,
+                   CreatedDate= new DateTime(2000,01,01)
                },
               new Villa
               {
@@ -41,7 +41,7 @@ namespace VillaApp_WebAPI.Data
                   Rate = 300,
                   Sqft = 550,
                   Amenity = "",
-                  CreatedDate = DateTime.Now,
+                  CreatedDate = new DateTime(2000, 01, 01)
               },
               new Villa
               {
@@ -53,7 +53,7 @@ namespace VillaApp_WebAPI.Data
                   Rate = 400,
                   Sqft = 750,
                   Amenity = "",
-                  CreatedDate = DateTime.Now,
+                  CreatedDate = new DateTime(2000, 01, 01)
               },
               new Villa
               {
@@ -65,7 +65,7 @@ namespace VillaApp_WebAPI.Data
                   Rate = 550,
                   Sqft = 900,
                   Amenity = "",
-                  CreatedDate = DateTime.Now,
+                  CreatedDate = new DateTime(2000, 01, 01)
               },
               new Villa
               {
@@ -77,7 +77,7 @@ namespace VillaApp_WebAPI.Data
                   Rate = 600,
                   Sqft = 1100,
                   Amenity = "",
-                  CreatedDate = DateTime.Now,
+                  CreatedDate = new DateTime(2000, 01, 01)
               });
         }
 
