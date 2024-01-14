@@ -13,5 +13,7 @@ namespace MagicVilla_Web.Models.Dto
         
         public string token { get; set; }
 
+        public ContentType ContentType { get; set; } = ContentType.Json;
+
     }
 }
