@@ -1,11 +1,9 @@
 ﻿using MagicVilla_Utility;
 using MagicVilla_Web.Models;
 using MagicVilla_Web.Models.Dto;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using System;
-using System.Net.Http;
 using System.Text;
-using System.Text.Json.Serialization;
 
 
 namespace MagicVilla_Web.Services
@@ -27,14 +25,49 @@ namespace MagicVilla_Web.Services
             {
                 var client = httpClientFactory.CreateClient("MagicAPI");
                 HttpRequestMessage httpRequestMessage = new HttpRequestMessage();
-                httpRequestMessage.Headers.Add("Accept", "application/json");
-                httpRequestMessage.RequestUri =  new Uri(apiRequest.Url);   
-                if (apiRequest.Data != null)
+                if (apiRequest.ContentType == SD.ContentType.MultipartFormData)
                 {
-                    //not null HTTP POST/PUT
-                    httpRequestMessage.Content = new StringContent(JsonConvert.SerializeObject(apiRequest.Data), Encoding.UTF8, "application/json");
+                    httpRequestMessage.Headers.Add("Accept", "*/*"); //accept anything
+                }  
+                else
+                {
+                    httpRequestMessage.Headers.Add("Accept", "application/json");
                 }
+               
 
+                    httpRequestMessage.RequestUri =  new Uri(apiRequest.Url);
+                if (apiRequest.ContentType == SD.ContentType.MultipartFormData)
+                {
+                    var content = new MultipartFormDataContent();
+                    foreach (var prop in apiRequest.Data.GetType().GetProperties())
+                    {
+                        var value = prop.GetValue(apiRequest);
+                        if (value is FormFile)
+                        {
+                            var file = (FormFile)value;
+                            if (file != null)
+                            {
+                                content.Add(new StreamContent(file.OpenReadStream()), prop.Name, file.FileName);
+
+                            }
+                            else
+                            {
+                                content.Add(new StringContent(value == null ? "" : value.ToString()), prop.Name);
+
+                            }
+                            httpRequestMessage.Content = content;
+                        }
+                    }
+
+                }
+                else 
+                {
+                    if (apiRequest.Data != null)
+                    {
+                        //not null HTTP POST/PUT
+                        httpRequestMessage.Content = new StringContent(JsonConvert.SerializeObject(apiRequest.Data), Encoding.UTF8, "application/json");
+                    }
+                }
                 switch (apiRequest.ApiType)
                 {
                     case SD.ApiType.POST:
