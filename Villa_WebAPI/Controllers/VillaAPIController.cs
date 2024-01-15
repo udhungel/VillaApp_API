@@ -32,7 +32,7 @@ namespace VillaApp_WebAPI.Controllers
         }
 
         [HttpGet] //failed to lod API defination. Endpoint we add needs to be defined HTTP get or POST
-        [ResponseCache(CacheProfileName ="Default30")]
+       // [ResponseCache(CacheProfileName ="Default30")]
         [ProducesResponseType(StatusCodes.Status200OK)]     
         public async Task<ActionResult<APIResponse>> GetVillas([FromQuery(Name ="filterOccupany")] int? occupancy, int pageSize =0, int pageNumber = 1 )
         {
@@ -112,12 +112,10 @@ namespace VillaApp_WebAPI.Controllers
         [HttpPost]
         [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]       
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<APIResponse>> CreateVilla([FromBody] VillaCreateDTO createDTO)
+        public async Task<ActionResult<APIResponse>> CreateVilla([FromForm] VillaCreateDTO createDTO)
         {
             try
             {   
@@ -134,6 +132,35 @@ namespace VillaApp_WebAPI.Controllers
                 Villa villa = _mapper.Map<Villa>(createDTO);
 
                 await _dbVilla.CreateAsync(villa);
+
+                if (createDTO.Image != null)
+                {
+                    string fileName = villa.Id + Path.GetExtension(createDTO.Image.FileName);
+                    string filePath = @"wwwroot\ProductImage\" + fileName;
+
+                    var directoryLocation = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+
+                    FileInfo fileInfo= new FileInfo(directoryLocation);
+                    if (fileInfo.Exists)
+                    {
+                        fileInfo.Delete();  
+                    }
+                    using (var fileStream = new FileStream(directoryLocation, FileMode.Create))
+                    {
+                        createDTO.Image.CopyTo(fileStream); 
+                    }
+                    var baseURL = $"{HttpContext.Request.Scheme}//{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
+                    villa.ImageUrl = baseURL + "/ProductImage/" + fileName;
+                    villa.ImageLocalPath = filePath; 
+
+
+                }
+                else
+                {
+                    villa.ImageUrl = "https://placehold.co/600x400";
+                }
+                await _dbVilla.UpdateAsync(villa);  
+
                 _response.Result = _mapper.Map<VillaDTO>(villa);
                 _response.StatusCode = System.Net.HttpStatusCode.Created;
                 return CreatedAtRoute("GetVilla", new { id = villa.Id }, _response);

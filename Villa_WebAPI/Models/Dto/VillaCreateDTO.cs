@@ -16,7 +16,7 @@ namespace VillaApp_WebAPI.Models.Dto
         public int Occupany { get; set; }
         public int Sqft { get; set; }
         public string? ImageUrl { get; set; }
-        public IFormFile Image { get; set; }
+        public IFormFile? Image { get; set; }
         public string Amenity { get; set; }
     }
 }
